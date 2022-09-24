@@ -1,0 +1,30 @@
+services:
+  labwebdb:
+    image: mysql:latest
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=LabWebSampleRootPasswd
+      - MYSQL_DATABASE=lab_web_sample
+      - MYSQL_USER=LABWEBLABWEB
+      - MYSQL_PASSWORD=LabWebSampleSosd23333
+    networks:
+      - app-network
+    expose:
+      - 3306
+  labwebapi:
+    build: .
+    ports:
+      - 8080:8080
+    restart: always
+    networks:
+      - app-network
+volumes:
+  db_data:
+
+
+networks:
+  app-network:
+    name: lab-web-network
+    driver: bridge
