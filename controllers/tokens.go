@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/RockRockWhite/minio-client/config"
 	"github.com/RockRockWhite/minio-client/dtos"
 	"github.com/RockRockWhite/minio-client/utils"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"net/http"
 )
 
@@ -19,17 +19,17 @@ func CreateToken(c *gin.Context) {
 	if err := c.ShouldBind(&accessKey); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.ErrorDto{
 			Message:          "Bind Model Error",
-			DocumentationUrl: viper.GetString("Document.Url"),
+			DocumentationUrl: config.GetString("Document.Url"),
 		})
 		return
 	}
 
 	// 验证AccessKey
-	if accessKey.AccessKeyID != viper.GetString("Minio-Client.AccessKeyID") ||
-		accessKey.SecretAccessKey != viper.GetString("Minio-Client.SecretAccessKey") {
+	if accessKey.AccessKeyID != config.GetString("Minio-Client.AccessKeyID") ||
+		accessKey.SecretAccessKey != config.GetString("Minio-Client.SecretAccessKey") {
 		c.JSON(http.StatusBadRequest, dtos.ErrorDto{
 			Message:          "invalid access key.",
-			DocumentationUrl: viper.GetString("Document.Url"),
+			DocumentationUrl: config.GetString("Document.Url"),
 		})
 		return
 	}

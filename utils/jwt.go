@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/RockRockWhite/minio-client/config"
 	"github.com/golang-jwt/jwt"
 	"time"
 )
@@ -13,11 +14,10 @@ var _secret []byte
 var _issuer string
 var _expireDays int
 
-// InitJwt 初始化jwt
-func InitJwt(secret string, issuer string, expireDays int) {
-	_secret = []byte(secret)
-	_issuer = issuer
-	_expireDays = expireDays
+func init() {
+	_secret = []byte(config.GetString("Jwt.Secret"))
+	_issuer = config.GetString("Jwt.Issuer")
+	_expireDays = config.GetInt("Jwt.ExpireDays")
 }
 
 // GenerateJwtToken 生成JwtToken
