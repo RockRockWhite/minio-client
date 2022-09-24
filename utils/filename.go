@@ -10,8 +10,8 @@ func init() {
 	reg, _ = regexp.Compile("(.*)\\.(.*)")
 }
 
-func GetFileNameAndPosfix(filename string) (string, string) {
-	submatch := reg.FindStringSubmatch(filename)
+func GetPrefixAndPosfix(objectname string) (string, string) {
+	submatch := reg.FindStringSubmatch(objectname)
 	if len(submatch) != 3 {
 		return "", ""
 	}

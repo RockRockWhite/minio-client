@@ -20,8 +20,8 @@ func InitApiRouter() *gin.Engine {
 
 	buckets := router.Group("/buckets")
 	{
-		buckets.GET("/:filename", controllers.GetFile)
-		buckets.POST("/:filename", middlewares.AccessToken, controllers.UploadObject)
+		buckets.GET("/:objectname", controllers.GetFile)
+		buckets.POST("/", middlewares.AccessToken, controllers.UploadObject)
 	}
 
 	return router

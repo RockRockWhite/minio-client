@@ -19,15 +19,15 @@ func init() {
 }
 
 func GetFile(c *gin.Context) {
-	filename := c.Param("filename")
-	obj, err := utils.GetObject(filename)
+	objname := c.Param("objectname")
+	obj, err := utils.GetObject(objname)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	res, _ := io.ReadAll(obj)
-	fileContentDisposition := "attachment;filename=\"" + filename + "\""
+	fileContentDisposition := "attachment;objname=\"" + objname + "\""
 	c.Header("Content-Disposition", fileContentDisposition)
 	c.Data(http.StatusOK, "", res)
 }
@@ -35,15 +35,15 @@ func GetFile(c *gin.Context) {
 func UploadObject(c *gin.Context) {
 
 	file, _ := c.FormFile("file")
-	r, err := file.Open()
+	obj, err := file.Open()
 	if err != nil {
 		fmt.Println(err)
 	}
-	filename, postfix := utils.GetFileNameAndPosfix(file.Filename)
+	prefix, postfix := utils.GetPrefixAndPosfix(file.Filename)
 	id, _ := uuid.NewUUID()
-	filename += strings.Replace(id.String(), "-", "", -1)
+	prefix += strings.Replace(id.String(), "-", "", -1)
 
-	err = utils.PutObject(fmt.Sprintf("%s.%s", filename, postfix), r, file.Size)
+	err = utils.PutObject(fmt.Sprintf("%s.%s", prefix, postfix), obj, file.Size)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -51,6 +51,6 @@ func UploadObject(c *gin.Context) {
 	c.JSON(http.StatusOK, struct {
 		Url string
 	}{
-		Url: fmt.Sprintf("%s%s/buckets/%s.%s", _addr, _port, filename, postfix),
+		Url: fmt.Sprintf("%s%s/buckets/%s.%s", _addr, _port, prefix, postfix),
 	})
 }
