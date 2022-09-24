@@ -2,4 +2,4 @@
 *.log
 
 .idea/
-config/
+config/config.yml
