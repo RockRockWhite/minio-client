@@ -6,7 +6,6 @@ import (
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"io"
-	"log"
 )
 
 var _client *minio.Client
@@ -26,7 +25,7 @@ func init() {
 			Secure: false,
 		},
 	); err != nil {
-		log.Printf("%#v\n", minioClient) // minioClient is now set up
+		GetLogger().Fatalf("[fatalf] Failed to open minio client, %s", err.Error())
 	} else {
 		_client = minioClient
 	}
@@ -37,7 +36,7 @@ func init() {
 			_bucket,
 			minio.MakeBucketOptions{Region: "cn-east-1", ObjectLocking: true},
 		); err != nil {
-			log.Fatalln(err)
+			GetLogger().Fatalf("[fatalf] %s", err.Error())
 		}
 	}
 }

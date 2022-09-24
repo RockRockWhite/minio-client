@@ -22,7 +22,7 @@ func GetFile(c *gin.Context) {
 	objname := c.Param("objectname")
 	obj, err := utils.GetObject(objname)
 	if err != nil {
-		fmt.Println(err)
+		utils.GetLogger().Fatalf("[fatalf] Failed to get object %s, %s", objname, err.Error())
 		return
 	}
 
@@ -33,11 +33,10 @@ func GetFile(c *gin.Context) {
 }
 
 func UploadObject(c *gin.Context) {
-
 	file, _ := c.FormFile("file")
 	obj, err := file.Open()
 	if err != nil {
-		fmt.Println(err)
+		utils.GetLogger().Fatalf("[fatalf] Failed to open file, %s", err.Error())
 	}
 	prefix, postfix := utils.GetPrefixAndPosfix(file.Filename)
 	id, _ := uuid.NewUUID()
@@ -45,7 +44,7 @@ func UploadObject(c *gin.Context) {
 
 	err = utils.PutObject(fmt.Sprintf("%s.%s", prefix, postfix), obj, file.Size)
 	if err != nil {
-		fmt.Println(err)
+		utils.GetLogger().Fatalf("[fatalf] Failed to put object %s, %s", fmt.Sprintf("%s.%s", prefix, postfix), err.Error())
 	}
 
 	c.JSON(http.StatusOK, struct {

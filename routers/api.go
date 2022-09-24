@@ -11,7 +11,7 @@ func InitApiRouter() *gin.Engine {
 	router := gin.Default()
 
 	// 配置中间件
-	router.Use(middlewares.Logger())
+	router.Use(middlewares.Logger)
 
 	token := router.Group("/tokens")
 	{
@@ -21,7 +21,7 @@ func InitApiRouter() *gin.Engine {
 	buckets := router.Group("/buckets")
 	{
 		buckets.GET("/:objectname", controllers.GetFile)
-		buckets.POST("/", middlewares.AccessToken, controllers.UploadObject)
+		buckets.POST("", middlewares.AccessToken, controllers.UploadObject)
 	}
 
 	return router
