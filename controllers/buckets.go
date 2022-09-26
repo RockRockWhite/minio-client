@@ -47,7 +47,7 @@ func UploadObject(c *gin.Context) {
 		utils.GetLogger().Fatalf("[fatalf] Failed to put object %s, %s", fmt.Sprintf("%s.%s", prefix, postfix), err.Error())
 	}
 
-	c.JSON(http.StatusOK, struct {
+	c.JSON(http.StatusCreated, struct {
 		Url string
 	}{
 		Url: fmt.Sprintf("%s%s/buckets/%s.%s", _addr, _port, prefix, postfix),
