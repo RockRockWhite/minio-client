@@ -20,7 +20,13 @@ func init() {
 }
 
 func GetFile(c *gin.Context) {
-	objname := c.Param("objectname")
+	escaped := c.Param("objectname")
+	objname, err := url.PathUnescape(escaped)
+	if err != nil {
+		utils.GetLogger().Fatalf("[fatalf] Failed to decode url %s, %s", escaped, err.Error())
+		return
+	}
+
 	obj, err := utils.GetObject(objname)
 	if err != nil {
 		utils.GetLogger().Fatalf("[fatalf] Failed to get object %s, %s", objname, err.Error())
@@ -40,7 +46,6 @@ func UploadObject(c *gin.Context) {
 		utils.GetLogger().Fatalf("[fatalf] Failed to open file, %s", err.Error())
 	}
 	prefix, postfix := utils.GetPrefixAndPosfix(file.Filename)
-	prefix = url.QueryEscape(prefix)
 
 	id, _ := uuid.NewUUID()
 	prefix += strings.Replace(id.String(), "-", "", -1)
@@ -50,9 +55,9 @@ func UploadObject(c *gin.Context) {
 		utils.GetLogger().Fatalf("[fatalf] Failed to put object %s, %s", fmt.Sprintf("%s.%s", prefix, postfix), err.Error())
 	}
 
-	c.JSON(http.StatusOK, struct {
+	c.JSON(http.StatusCreated, struct {
 		Url string
 	}{
-		Url: fmt.Sprintf("%s%s/buckets/%s.%s", _addr, _port, prefix, postfix),
+		Url: fmt.Sprintf("%s%s/buckets/%s.%s", _addr, _port, url.PathEscape(prefix), url.PathEscape(postfix)),
 	})
 }
