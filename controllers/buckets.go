@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -39,6 +40,8 @@ func UploadObject(c *gin.Context) {
 		utils.GetLogger().Fatalf("[fatalf] Failed to open file, %s", err.Error())
 	}
 	prefix, postfix := utils.GetPrefixAndPosfix(file.Filename)
+	prefix = url.QueryEscape(prefix)
+
 	id, _ := uuid.NewUUID()
 	prefix += strings.Replace(id.String(), "-", "", -1)
 
