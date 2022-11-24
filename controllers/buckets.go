@@ -15,7 +15,7 @@ import (
 var _addr, _port string
 
 func init() {
-	_addr = config.GetString("HttpServer.Addr")
+	_addr = config.GetString("HttpServer.ExternalAddr")
 	_port = config.GetString("HttpServer.Port")
 }
 
@@ -58,6 +58,6 @@ func UploadObject(c *gin.Context) {
 	c.JSON(http.StatusCreated, struct {
 		Url string
 	}{
-		Url: fmt.Sprintf("%s%s/buckets/%s.%s", _addr, _port, url.PathEscape(prefix), url.PathEscape(postfix)),
+		Url: fmt.Sprintf("%s/buckets/%s.%s", _addr, url.PathEscape(prefix), url.PathEscape(postfix)),
 	})
 }
